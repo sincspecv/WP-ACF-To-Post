@@ -43,7 +43,6 @@ class LayoutBase {
 		self::$key = strtolower( preg_replace( '%([a-z])([A-Z])%', '\1_\2', stripslashes( self::$class ) ) );
 
 		add_filter( 'acf_to_post/layouts', [self::$class, 'addLayout'] );
-
 	}
 
 	/**

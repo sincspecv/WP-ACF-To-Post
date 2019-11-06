@@ -13,10 +13,20 @@ Domain Path: /lang
 namespace TFR\ACFToPost;
 
 use TFR\ACFToPost\Inc\Config;
+use TFR\ACFToPost\Inc\Fields;
 
 // Exit if accessed directly
 if( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * Class Plugin
+ *
+ * @package TFR\ACFToPost
+ * @since 0.1.0
+ *
+ * TODO: Break this out into a bootstrap class
+ * TODO: Figure out a better place to init Fields
+ */
 class Plugin {
 	/**
 	 * Define the version of the plugin
@@ -41,6 +51,9 @@ class Plugin {
 
 		add_action('plugins_loaded', [Config::class, 'initLayouts']);
 		add_action('acf/init', [$this, 'addFlexibleLayouts']);
+
+		Fields::init();
+
 	}
 
 	/**
@@ -62,13 +75,13 @@ class Plugin {
 	public function addFlexibleLayouts()  {
 
 		acf_add_local_field_group([
-			'key'            => strtolower( str_replace(['\\', '-'], '_', __NAMESPACE__ ) ) . '_flexible_layout',
-			'title'          => __(Config::groupLabel(), 'tfr'),
+			'key'            => Config::groupKey(),
+			'title'          => Config::groupLabel(),
 			'fields'         => [
 				[
 					'key'          => Config::key(),
 					'label'        => Config::flexibleContentLabel(),
-					'name'         => Config::key(),
+					'name'         => Config::name(),
 					'type'         => 'flexible_content',
 					'layouts'      => Config::layouts(),
 					'button_label' => Config::buttonLabel(),
@@ -77,6 +90,7 @@ class Plugin {
 			'location'       => Config::locations(),
 			'hide_on_screen' => ['the_content'],
 		]);
+
 	}
 
 }

@@ -60,6 +60,10 @@ class Config {
 		return apply_filters( 'acf_to_post/flexible_content_label', $flex_content_label );
 	}
 
+	public static function groupKey() {
+		$group_key = strtolower( str_replace(['\\', '-'], '_', __NAMESPACE__ ) ) . '_flexible_layout';
+		return apply_filters( 'acf_to_post/group_key', $group_key );
+	}
 	/**
 	 * Return the label text for the flexible layout group
 	 *
@@ -139,8 +143,6 @@ class Config {
 	 */
 	public static function initLayouts() {
 		if( class_exists( 'ACF' ) ) {
-
-			do_action( 'acf_to_post/init_layouts' );
 
 			Layouts\Hero::init();
 
