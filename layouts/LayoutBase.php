@@ -42,7 +42,7 @@ class LayoutBase {
 		self::$class = get_called_class();
 		self::$key = strtolower( preg_replace( '%([a-z])([A-Z])%', '\1_\2', stripslashes( self::$class ) ) );
 
-		add_filter( Config::LAYOUTS_FILTER, [self::$class, 'addLayout'] );
+		add_filter( 'acf_to_post/layouts', [self::$class, 'addLayout'] );
 
 	}
 
@@ -50,7 +50,7 @@ class LayoutBase {
 	 * Removes the layout from the list of layouts
 	 */
 	public static function remove() {
-		remove_filter( Config::LAYOUTS_FILTER, [self::$class, 'addLayout'] );
+		remove_filter( 'acf_to_post/layouts', [self::$class, 'addLayout'] );
 	}
 
 	/**

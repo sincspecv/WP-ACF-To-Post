@@ -60,19 +60,18 @@ class Plugin {
 	 * Add the flexible layout group
 	 */
 	public function addFlexibleLayouts()  {
-		$layouts = apply_filters( Config::LAYOUTS_FILTER, []);
 
 		acf_add_local_field_group([
 			'key'            => strtolower( str_replace(['\\', '-'], '_', __NAMESPACE__ ) ) . '_flexible_layout',
-			'title'          => __(Config::GROUP_LABEL, 'tfr'),
+			'title'          => __(Config::groupLabel(), 'tfr'),
 			'fields'         => [
 				[
-					'key'          => Config::KEY,
-					'label'        => __('Blocks', 'tfr'),
-					'name'         => Config::KEY,
+					'key'          => Config::key(),
+					'label'        => Config::flexibleContentLabel(),
+					'name'         => Config::key(),
 					'type'         => 'flexible_content',
-					'layouts'      => $layouts,
-					'button_label' => __('Add Block', 'tfr'),
+					'layouts'      => Config::layouts(),
+					'button_label' => Config::buttonLabel(),
 				],
 			],
 			'location'       => Config::locations(),
@@ -84,4 +83,6 @@ class Plugin {
 
 // bootstrap the plugin
 new Plugin();
+
+
 

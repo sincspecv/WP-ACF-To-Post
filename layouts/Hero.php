@@ -3,7 +3,6 @@
 
 namespace TFR\ACFToPost\Layouts;
 
-use TFR\ACFToPost\Inc\Config;
 use TFR\ACFToPost\Util\FieldGenerator;
 
 class Hero extends LayoutBase {
@@ -11,7 +10,6 @@ class Hero extends LayoutBase {
 		parent::init();
 
 		self::$label = __( 'Hero', 'tfr');
-		add_filter( Config::LAYOUTS_FILTER, [self::class, 'addLayout'] );
 	}
 
 	protected static function fields() {

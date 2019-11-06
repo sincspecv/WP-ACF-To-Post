@@ -14,40 +14,91 @@ use TFR\ACFToPost\Layouts;
  * @since 0.1.0
  */
 class Config {
-	/**
-	 * Array of post types to add flexible layout
-	 */
-	const POST_TYPES = [
-		'post',
-		'page'
-	];
 
 	/**
-	 * Templates that use the flexible layout
+	 * Return an array of post types to add flexible layout
+	 *
+	 * @return mixed|void
 	 */
-	const TEMPLATES = [
-		'default'
-	];
+	public static function postTypes() {
+		$post_types = [
+			'post',
+			'page'
+		];
+		return apply_filters( 'acf_to_post/post_types', $post_types );
+	}
 
 	/**
-	 * Name of filter for the layouts array
+	 * Return an array of templates to add flexible layout
+	 *
+	 * @return mixed|void
 	 */
-	const LAYOUTS_FILTER = 'flexible_group_layouts';
+	public static function templates() {
+		$templates = [
+			'default'
+		];
+		return apply_filters( 'acf_to_post/templates', $templates );
+	}
 
 	/**
-	 * Label for the flexible layouts group displayed on page editor
+	 * Return array of layouts to use in flexible layout
+	 *
+	 * @return mixed|void
 	 */
-	const GROUP_LABEL = 'Content Blocks';
+	public static function layouts() {
+		$layouts = [];
+		return apply_filters( 'acf_to_post/layouts', $layouts );
+	}
 
 	/**
-	 * Unique key for flexible layout group
+	 * Return label for flexible content
+	 *
+	 * @return mixed|void
 	 */
-	const KEY = 'blocks';
+	public static function flexibleContentLabel() {
+		$flex_content_label = __( 'Blocks', 'tfr' );
+		return apply_filters( 'acf_to_post/flexible_content_label', $flex_content_label );
+	}
 
 	/**
-	 * Unique name for flexible layout group
+	 * Return the label text for the flexible layout group
+	 *
+	 * @return mixed|void
 	 */
-	const NAME = 'blocks';
+	public static function groupLabel() {
+		$group_label = __( 'Content Blocks', 'tfr' );
+		return apply_filters( 'acf_to_post/group_label', $group_label );
+	}
+
+	/**
+	 * Return the 'Add Layout' button label
+	 *
+	 * @return mixed|void
+	 */
+	public static function buttonLabel() {
+		$button_label = __('Add Block', 'tfr');
+		return apply_filters( 'acf_to_post/button_label', $button_label);
+	}
+
+	/**
+	 * Return unique key for flexible layout group
+	 *
+	 * @return mixed|void
+	 */
+	public static function key() {
+		$key = 'blocks';
+		return apply_filters( 'acf_to_post/key', $key );
+	}
+
+	/**
+	 * Return unique name for flexible layout group
+	 *
+	 * @return mixed|void
+	 */
+	public static function name() {
+		$name = 'blocks';
+		return apply_filters( 'acf_to_post/name', $name );
+	}
 
 	/**
 	 * Builds array of locations to add flexible layout
@@ -57,7 +108,7 @@ class Config {
 	public static function locations() {
 		$results = [];
 
-		foreach (self::TEMPLATES as $PAGE_TEMPLATE) {
+		foreach (self::templates() as $PAGE_TEMPLATE) {
 			$toAdd =[
 				[
 					'param'    => 'page_template',
@@ -69,7 +120,7 @@ class Config {
 			array_push($results, $toAdd);
 		}
 
-		foreach (self::POST_TYPES as $POST_TYPE) {
+		foreach (self::postTypes() as $POST_TYPE) {
 			$toAdd =[
 				[
 					'param'    => 'post_type',
@@ -87,7 +138,9 @@ class Config {
 	 * Initialize layouts to be added to the flexible layout group
 	 */
 	public static function initLayouts() {
-		if(class_exists( 'ACF' ) ) {
+		if( class_exists( 'ACF' ) ) {
+
+			do_action( 'acf_to_post/init_layouts' );
 
 			Layouts\Hero::init();
 
