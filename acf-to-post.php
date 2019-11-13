@@ -13,6 +13,7 @@ Domain Path: /lang
 namespace TFR\ACFToPost;
 
 // Exit if accessed directly
+use TFR\ACFToPost\Groups\PageGroup;
 use TFR\ACFToPost\Util\FieldGenerator;
 use TFR\ACFToPost\Util\FormatFieldType;
 
@@ -54,6 +55,7 @@ class Plugin {
 
 		Fields::init();
 		FormatFieldType::init();
+		PageGroup::init();
 	}
 
 	/**
