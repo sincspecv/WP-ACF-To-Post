@@ -1,12 +1,14 @@
 <?php
 
 
-namespace TFR\ACFToPost\Inc;
+namespace TFR\ACFToPost;
 
 /**
  * Class Fields
  *
- * This adds the fields to the post object
+ * This adds the fields to the post object via WP_Post's magic getter
+ *
+ * @see https://secure.php.net/manual/en/language.oop5.overloading.php#object.get
  *
  * @package TFR\ACFToPost\Inc
  * @since 0.1.0

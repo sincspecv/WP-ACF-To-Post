@@ -3,7 +3,7 @@
 
 namespace TFR\ACFToPost\Layouts;
 
-use TFR\ACFToPost\Inc\Config;
+use TFR\ACFToPost\Config;
 
 /**
  * Class LayoutBase

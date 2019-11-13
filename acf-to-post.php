@@ -12,10 +12,10 @@ Domain Path: /lang
 
 namespace TFR\ACFToPost;
 
-use TFR\ACFToPost\Inc\Config;
-use TFR\ACFToPost\Inc\Fields;
-
 // Exit if accessed directly
+use TFR\ACFToPost\Util\FieldGenerator;
+use TFR\ACFToPost\Util\FormatFieldType;
+
 if( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -53,20 +53,14 @@ class Plugin {
 		add_action('acf/init', [$this, 'addFlexibleLayouts']);
 
 		Fields::init();
-
+		FormatFieldType::init();
 	}
 
 	/**
 	 * Load classes
 	 */
 	private function autoload() {
-		$dirs = glob( "{$this->path}/*", GLOB_ONLYDIR);
-
-		foreach( $dirs as $dir ) {
-			if( file_exists( "{$dir}/autoload.php" ) ) {
-				require_once( "{$dir}/autoload.php");
-			}
-		}
+		require_once $this->path . '/autoload.php';
 	}
 
 	/**

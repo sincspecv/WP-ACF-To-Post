@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TFR\ACFToPost\Inc;
+namespace TFR\ACFToPost;
 
 use TFR\ACFToPost\Layouts;
 
