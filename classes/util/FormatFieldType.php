@@ -15,6 +15,8 @@ namespace TFR\ACFToPost\Util;
  * apply the formatting function to, and the 'function' value is an array or string that is passed directly
  * to the acf/format_value/type=* filter as the callback.
  *
+ * TODO: Add all field types
+ *
  * @package TFR\ACFToPost\Util
  * @since 0.1.0
  */
