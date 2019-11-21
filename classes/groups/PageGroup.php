@@ -5,6 +5,7 @@ namespace TFR\ACFToPost\Groups;
 
 
 use TFR\ACFToPost\Util\FieldGenerator;
+use TFR\ACFToPost\Repeaters\Page;
 
 class PageGroup {
 	const KEY = 'page_group';
@@ -25,11 +26,14 @@ class PageGroup {
 	private static function fields() {
 		$fields = new FieldGenerator( self::KEY );
 
+		var_dump(Page::add());
+
 		return [
 			$fields->add( 'text', [
 				'name'  => 'text',
 				'label' => __( 'Page Group Text', 'tfr' ),
 			] ),
+			Page::add(),
 		];
 	}
 }

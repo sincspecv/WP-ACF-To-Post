@@ -8,8 +8,6 @@ use TFR\ACFToPost\Plugin;
 /**
  * Class FieldGenerator
  *
- * TODO: Add all field types
- *
  * @package TFR\ACFToPost\Util
  * @since 0.1.0
  * @see https://www.advancedcustomfields.com/resources/register-fields-via-php/
@@ -24,14 +22,17 @@ class FieldGenerator {
 	}
 
 	public function add( $type = '', $args = [] ) {
-		if( ! $type ) {
+
+		// If no type is specified we can't generate a field
+		if( empty( $type ) ) {
 			return false;
 		}
 
-		$fieldArr = $this->parseArgs( $args, $type );
-		$fieldArr['key'] = "{$this->key}_{$fieldArr['name']}";
+		// Set the field key if no key was passed in args
+		$args['key'] = isset( $args['key'] ) ? $args['key'] : "{$this->key}_{$args['name']}";
 
-		return $fieldArr;
+		return $this->parseArgs( $args, $type );
+
 	}
 
 	private function parseArgs( $args, $type, $defaultArgs = [] ) {
@@ -62,5 +63,6 @@ class FieldGenerator {
 		}
 
 		return wp_parse_args( $args, $defaultArgs );
+
 	}
 }

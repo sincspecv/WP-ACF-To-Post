@@ -15,7 +15,7 @@ use TFR\ACFToPost\Config;
  * @package TFR\ACFToPost\Layouts
  * @since 0.1.0
  */
-class LayoutBase {
+abstract class LayoutBase {
 	/**
 	 * Reference to called class
 	 *
@@ -38,20 +38,23 @@ class LayoutBase {
 	protected static $label;
 
 	/**
+	 * Array of repeater fields to add the layout to
+	 *
+	 * @var $repeaters  array
+	 */
+	protected static $repeaters;
+
+	/**
 	 * Initializes the layout and adds it to the list of layouts
 	 */
 	public static function init() {
 		self::$class = get_called_class();
-		self::$key = strtolower( preg_replace( '%([a-z])([A-Z])%', '\1_\2', stripslashes( self::$class ) ) );
+		self::$key = strtolower( preg_replace( '/\B([A-Z])/', '_$1', substr( strrchr( self::$class, "\\" ), 1 ) ) );
 
-		add_filter( 'acf_to_post/layouts', [self::$class, 'addLayout'] );
-	}
 
-	/**
-	 * Removes the layout from the list of layouts
-	 */
-	public static function remove() {
-		remove_filter( 'acf_to_post/layouts', [self::$class, 'addLayout'] );
+		foreach( self::$repeaters as $repeater ) {
+			add_filter( "acf_to_post/repeater_fields/{$repeater}", [self::$class, 'addLayout'] );
+		}
 	}
 
 	/**

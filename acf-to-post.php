@@ -12,11 +12,11 @@ Domain Path: /lang
 
 namespace TFR\ACFToPost;
 
-// Exit if accessed directly
 use TFR\ACFToPost\Groups\PageGroup;
-use TFR\ACFToPost\Util\FieldGenerator;
+use TFR\ACFToPost\Layouts\Hero;
 use TFR\ACFToPost\Util\FormatFieldType;
 
+// Exit if accessed directly
 if( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -24,9 +24,6 @@ if( ! defined( 'ABSPATH' ) ) exit;
  *
  * @package TFR\ACFToPost
  * @since 0.1.0
- *
- * TODO: Break this out into a bootstrap class
- * TODO: Figure out a better place to init Fields
  */
 class Plugin {
 	/**
@@ -50,12 +47,11 @@ class Plugin {
 		$this->path = dirname(__FILE__);
 		$this->autoload();
 
-		add_action('plugins_loaded', [Config::class, 'initLayouts']);
-		add_action('acf/init', [$this, 'addFlexibleLayouts']);
-
 		Fields::init();
 		FormatFieldType::init();
-		PageGroup::init();
+
+		$this->initLayouts();
+		$this->initGroups();
 	}
 
 	/**
@@ -65,30 +61,29 @@ class Plugin {
 		require_once $this->path . '/autoload.php';
 	}
 
-	/**
-	 * Add the flexible layout group
-	 */
-	public function addFlexibleLayouts()  {
-
-		acf_add_local_field_group([
-			'key'            => Config::groupKey(),
-			'title'          => Config::groupLabel(),
-			'fields'         => [
-				[
-					'key'          => Config::key(),
-					'label'        => Config::flexibleContentLabel(),
-					'name'         => Config::name(),
-					'type'         => 'flexible_content',
-					'layouts'      => Config::layouts(),
-					'button_label' => Config::buttonLabel(),
-				],
-			],
-			'location'       => Config::locations(),
-			'hide_on_screen' => ['the_content'],
-		]);
-
+	private function initLayouts() {
+		$layouts = [
+			Hero::class,
+		];
+		$layouts = apply_filters( 'acf_to_post/init/layouts', $layouts );
+		if( ! empty( $layouts ) ) {
+			foreach( $layouts as $layout ) {
+				forward_static_call( [$layout, 'init'] );
+			}
+		}
 	}
 
+	private function initGroups() {
+		$groups = [
+			PageGroup::class,
+		];
+		$groups = apply_filters( 'acf_to_post/init/groups', $groups );
+		if( ! empty( $groups ) ) {
+			foreach( $groups as $group ) {
+				forward_static_call( [$group, 'init'] );
+			}
+		}
+	}
 }
 
 // bootstrap the plugin
