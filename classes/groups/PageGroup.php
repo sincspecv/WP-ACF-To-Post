@@ -26,7 +26,7 @@ class PageGroup {
 		$fields = new FieldGenerator( self::KEY );
 
 		return [
-			$fields->text( [
+			$fields->add( 'text', [
 				'name'  => 'text',
 				'label' => __( 'Page Group Text', 'tfr' ),
 			] ),

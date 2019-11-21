@@ -13,10 +13,10 @@ class Hero extends LayoutBase {
 	}
 
 	protected static function fields() {
-		$fieldGen = new FieldGenerator( self::$key );
+		$fields = new FieldGenerator( self::$key );
 
 		$fields = [
-			$fieldGen->text( [
+			$fields->add( 'text', [
 				'name' => 'hero_text',
 				'label' => __( 'Hero Text', 'tfr' ),
 			] ),

@@ -23,60 +23,41 @@ class FieldGenerator {
 		$this->key = esc_attr( $key );
 	}
 
-	public function text( $args = [] ) {
-		$params = $this->getParams( $args, __FUNCTION__ );
+	public function add( $type = '', $args = [] ) {
+		if( ! $type ) {
+			return false;
+		}
 
-		$fieldArr = [
-			'key'   => "{$this->key}_{$params['name']}",
-			'label' => $params['label'],
-			'type'  => __FUNCTION__,
-			'name'  => $params['name'],
-			'wrapper' => [
-				'width' => $params['width'],
-			],
-		];
+		$fieldArr = $this->parseArgs( $args, $type );
+		$fieldArr['key'] = "{$this->key}_{$fieldArr['name']}";
 
 		return $fieldArr;
 	}
 
-	public function textarea( $args = [] ) {
-		$params = $this->getParams( $args, __FUNCTION__ );
+	private function parseArgs( $args, $type, $defaultArgs = [] ) {
 
-		$fieldArr = [
-			'key'   => "{$this->key}_{$params['name']}",
-			'label' => $params['label'],
-			'type'  => __FUNCTION__,
-			'name'  => $params['name'],
-			'wrapper' => [
-				'width' => $params['width'],
-			],
-		];
-
-		return $fieldArr;
-	}
-
-	public function wysiwyg( $args = [] ) {
-		$params = $this->getParams( $args, __FUNCTION__ );
-
-		$fieldArr = [
-			'key'   => "{$this->key}_{$params['name']}",
-			'label' => $params['label'],
-			'type'  => __FUNCTION__,
-			'name'  => $params['name'],
-			'wrapper' => [
-				'width' => $params['width'],
-			],
-		];
-
-		return $fieldArr;
-	}
-
-	private function getParams( $args, $type, $defaultArgs = [] ) {
 		if( empty( $defaultArgs )) {
 			$defaultArgs = [
+				'key'   => '',
+				'label' => __( str_replace( ['_','-'], ' ',  ucwords( $type ) ), 'tfr' ),
 				'name'  => $type,
-				'label' => __( str_replace( ['_','-'], ' ',  ucwords($type)), 'tfr' ),
-				'width' => 100,
+				'type'  => $type,
+				'instructions'      => '',
+				'required'          => 0,
+				'conditional_logic' => 0,
+				'wrapper' => [
+					'width' => '',
+					'class' => '',
+					'id'    => '',
+				],
+				'default_value' => '',
+				'placeholder'   => '',
+				'prepend'       => '',
+				'append'        => '',
+				'maxlength'     => '',
+				'min'           => '',
+				'max'           => '',
+				'step'          => '',
 			];
 		}
 
