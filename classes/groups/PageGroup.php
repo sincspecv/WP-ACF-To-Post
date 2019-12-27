@@ -6,27 +6,30 @@ namespace TFR\ACFToPost\Groups;
 
 use TFR\ACFToPost\Util\FieldGenerator;
 use TFR\ACFToPost\Repeaters\Page;
+use TFR\ACFToPost\Util\Util;
 
 class PageGroup {
-	const KEY = 'page_group';
 
 	public static function init() {
-		$fields = apply_filters( 'acf_to_post/' . self::KEY . '_fields', self::fields() );
+		$fields = apply_filters( 'acf_to_post/' . self::key() . '/fields', self::fields() );
 
 		$args = [
-			'key'        => self::KEY,
-			'title'      => __( 'Page Fields', 'tfr' ),
-			'fields'     => $fields,
-			'post_types' => ['page'],
+			'key'            => self::key(),
+			'title'          => __( 'Page Fields', 'tfr' ),
+			'fields'         => $fields,
+			'post_types'     => ['page'],
+			'hide_on_screen' => ['the_content']
 		];
 
 		return new Group( $args );
 	}
 
-	private static function fields() {
-		$fields = new FieldGenerator( self::KEY );
+	protected static function key() {
+		return Util::slugifyClassName( self::class );
+	}
 
-		var_dump(Page::add());
+	private static function fields() {
+		$fields = new FieldGenerator( self::key() );
 
 		return [
 			$fields->add( 'text', [

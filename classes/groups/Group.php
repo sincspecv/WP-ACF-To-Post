@@ -61,7 +61,7 @@ class Group {
 			'fields'         => [],
 			'post_types'     => [],
 			'templates'      => [],
-			'hide_on_screen' => ['the_content'],
+			'hide_on_screen' => [],
 		];
 
 		return wp_parse_args( $args, $default );

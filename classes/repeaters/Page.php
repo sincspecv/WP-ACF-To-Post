@@ -15,7 +15,9 @@ class Page extends FlexibleContent {
 	}
 
 	protected static function layouts() {
-		$layouts = apply_filters( 'acf_to_post/repeater_fields/' . self::$key, [] );
+		$layouts = apply_filters( 'acf_to_post/' . self::$key . '/layouts', [] );
+
+		error_log(print_r($layouts, true));
 
 		return $layouts;
 	}

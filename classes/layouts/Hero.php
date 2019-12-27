@@ -5,29 +5,33 @@ namespace TFR\ACFToPost\Layouts;
 
 use TFR\ACFToPost\Util\FieldGenerator;
 use TFR\ACFToPost\Repeaters\Page;
+use TFR\ACFToPost\Util\Util;
 
-class Hero extends LayoutBase {
+class Hero {
 	public static function init() {
-		self::$label = __( 'Hero', 'tfr');
-		self::$repeaters = [
-			Page::key(),
+		$args = [
+			'key'        => self::key(),
+			'label'      => __( 'Hero', 'tfr' ),
+			'name'       => self::key(),
+			'sub_fields' => self::fields(),
+			'repeaters'  => [Page::key()],
 		];
-		parent::init();
 
-		var_dump(Page::key());
-
+		return new Layout( $args );
 	}
 
-	protected static function fields() {
-		$fields = new FieldGenerator( self::$key );
+	public static function fields() {
+		$fields = new FieldGenerator( self::key() );
 
-		$fields = [
+		return [
 			$fields->add( 'text', [
-				'name' => 'hero_text',
+				'name'  => 'text',
 				'label' => __( 'Hero Text', 'tfr' ),
-			] ),
+			])
 		];
+	}
 
-		return $fields;
+	public static function key() {
+		return Util::slugifyClassName( self::class );
 	}
 }

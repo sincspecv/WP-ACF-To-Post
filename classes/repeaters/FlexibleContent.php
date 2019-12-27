@@ -112,9 +112,12 @@ abstract class FlexibleContent {
 		$layouts = [
 
 		];
-		$layouts = apply_filters( 'acf_to_post/repeater_fields/' . self::$key, $layouts );
+		$layouts = apply_filters( 'acf_to_post/' . self::$key . '/layouts', $layouts );
 
-		return $layouts;
+		error_log(print_r($layouts, true));
+
+
+		return [$layouts];
 	}
 
 	public static function key() {
