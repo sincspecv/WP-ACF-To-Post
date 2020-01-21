@@ -4,7 +4,7 @@
 namespace TFR\ACFToPost\Layouts;
 
 use TFR\ACFToPost\Util\FieldGenerator;
-use TFR\ACFToPost\Repeaters\Page;
+use TFR\ACFToPost\Repeaters\Modules;
 use TFR\ACFToPost\Util\Util;
 
 class Hero {
@@ -14,7 +14,7 @@ class Hero {
 			'label'      => __( 'Hero', 'tfr' ),
 			'name'       => self::key(),
 			'sub_fields' => self::fields(),
-			'repeaters'  => [Page::key()],
+			'repeaters'  => [Modules::key()],
 		];
 
 		return new Layout( $args );

@@ -12,8 +12,9 @@ Domain Path: /lang
 
 namespace TFR\ACFToPost;
 
-use TFR\ACFToPost\Groups\PageGroup;
+use TFR\ACFToPost\Groups\Page;
 use TFR\ACFToPost\Layouts\Hero;
+use TFR\ACFToPost\Repeaters\Modules;
 use TFR\ACFToPost\Util\FormatFieldType;
 
 // Exit if accessed directly
@@ -53,7 +54,8 @@ class Plugin {
 		Fields::init();
 		FormatFieldType::init();
 
-		$this->initLayouts();
+//		$this->initLayouts();
+		$this->initFields();
 		$this->initGroups();
 	}
 
@@ -90,6 +92,22 @@ class Plugin {
 		}
 	}
 
+	private function initFields() {
+		$fields = [
+			Modules::class,
+		];
+
+		if( ! empty( $fields ) ) {
+			foreach( $fields as $field ) {
+				// Make sure the init method exists before calling it
+				if( method_exists( $field, 'init' ) ) {
+					$obj = new $field;
+					$obj->init();
+				}
+			}
+		}
+	}
+
 	/**
 	 * Initialize ACF groups
 	 *
@@ -100,15 +118,16 @@ class Plugin {
 	 */
 	private function initGroups() {
 		$groups = [
-			PageGroup::class,
+			Page::class,
 		];
 		$groups = apply_filters( 'acf_to_post/init/groups', $groups );
 
 		if( ! empty( $groups ) ) {
 			foreach( $groups as $group ) {
 				// Make sure the init method exists before calling it
-				if( method_exists ($group, 'init' ) ) {
-					forward_static_call( [$group, 'init'] );
+				if( method_exists ( $group, 'init' ) ) {
+					$obj = new $group;
+					$obj->init();
 				}
 			}
 		}
