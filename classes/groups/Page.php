@@ -4,7 +4,6 @@ namespace TFR\ACFToPost\Groups;
 
 use TFR\ACFToPost\Base\Group;
 use TFR\ACFToPost\Util\FieldGenerator;
-use TFR\ACFToPost\Util\Util;
 
 class Page extends Group {
 
@@ -12,7 +11,7 @@ class Page extends Group {
 		parent::__construct();
 
 		// Set the group parameters
-		$this->setKey( Util::slugifyClassName( __CLASS__ ) );
+		$this->setTitle( __( 'Page Group', 'tfr' ) );
 		$this->setPostTypes( ['page', 'post'] );
 	}
 
