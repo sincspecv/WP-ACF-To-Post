@@ -28,15 +28,9 @@ class Fields {
 	 * @param $post*
 	 * @return array
 	 */
-	private static function getFields( $post ) {
-		$fields = get_fields( $post->ID );
-
-		if( ! array_key_exists( Config::name(), $fields ) ) {
-			return [];
-		}
-		unset( $fields[Config::name()][0]['acf_fc_layout'] );
-
-		return $fields[Config::name()];
+	private static function getFields( $post_id ) {
+		$fields = get_fields( $post_id );
+		return $fields;
 	}
 
 	/**
@@ -49,7 +43,7 @@ class Fields {
 	 * @param mixed  $value
 	 * @param int    $post_id
 	 * @param string $meta_key
-	 * @param int    $single   @todo handle the case where this is false
+	 * @param int    $single
 	 *
 	 * @see https://iandunn.name/2016/10/22/accessing-post-meta-and-more-via-post-meta_key/
 	 *
@@ -60,15 +54,10 @@ class Fields {
 	 *      Any non-null value will be returned as if it were pulled from the database
 	 */
 	public static function addMetaData( $value, $post_id, $meta_key, $single ) {
-		$post = get_post( $post_id );
-
-		if( ! in_array( $post->post_type, Config::postTypes() ) ) {
-			return $value;
-		}
 
 		switch ( $meta_key ) {
 			case 'fields' :
-				$value = self::getFields( $post );
+				$value = $single = true ? [self::getFields( $post_id )] : self::getFields( $post_id );
 				break;
 			default :
 				break;
@@ -83,6 +72,6 @@ class Fields {
 	 * @since 0.1.0
 	 */
 	public static function remove() {
-		remove_action( 'get_post_metadata', [self::class, 'add'] );
+		remove_action( 'get_post_metadata', [self::class, 'addMetaData'] );
 	}
 }

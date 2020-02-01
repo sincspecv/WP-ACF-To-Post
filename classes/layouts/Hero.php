@@ -23,6 +23,11 @@ class Hero extends Layout {
 			$fields->add( 'text', [
 				'name'  => 'text',
 				'label' => __( 'Hero Text', 'tfr' ),
+			]),
+
+			$fields->add( 'image', [
+				'name'  => 'image',
+				'label' => __( 'Background Image', 'tfr' ),
 			])
 		];
 	}
