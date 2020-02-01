@@ -4,6 +4,8 @@
 namespace TFR\ACFToPost\Base;
 
 
+use TFR\ACFToPost\Util\Util;
+
 class Group {
 	/**
 	 * Reference to called class
@@ -88,11 +90,11 @@ class Group {
 	 * @return array
 	 * @since 0.1.0
 	 */
-	public function buildArray() {
+	public function getArray() {
 		return [
-			'key'            => $this->key,
+			'key'            => $this->getKey(),
 			'title'          => isset( $this->title ) ? $this->title : ucwords( $this->key ),
-			'fields'         => isset( $this->fields ) ? $this->fields : [],
+			'fields'         => $this->getFields(),
 			'location'       => $this->getLocations(),
 			'hide_on_screen' => isset( $this->hidden_elements ) ? $this->hidden_elements : [],
 		];
@@ -104,11 +106,7 @@ class Group {
 	 * @since 0.1.0
 	 */
 	public function addGroup() {
-		if( empty( $this->key ) ) {
-			$this->setKey();
-		}
-
-		acf_add_local_field_group( $this->buildArray() );
+		acf_add_local_field_group( $this->getArray() );
 	}
 
 	/**
@@ -120,7 +118,7 @@ class Group {
 	 * @since 0.1.0
 	 */
 	protected function setKey( $key = '' ) {
-		$this->key = empty( $key ) ? strtolower( preg_replace( '/\B([A-Z])/', '_$1', substr( strrchr( $this->class, "\\" ), 1 ) ) ) : $key;
+		$this->key = empty( $key ) ? Util::slugifyClassName( $this->class ) : $key;
 	}
 
 	/**
@@ -129,9 +127,18 @@ class Group {
 	 * @since 0.1.0
 	 */
 	public function getKey() {
+		if( empty( $this->key ) ) {
+			$this->setKey();
+		}
 		return $this->key;
 	}
 
+	/**
+	 * Get the class
+	 *
+	 * @return string
+	 * @since 0.1.0
+	 */
 	public function getClass() {
 		return $this->class;
 	}
@@ -177,13 +184,29 @@ class Group {
 	}
 
 	/**
-	 * Set the fields for the group
+	 * Set the fields for the group.
 	 *
-	 * @param array $fields
+	 * This method MUST be defined in the child class.
+	 * Returns standard ACF field array
+	 *
 	 * @since 0.1.0
 	 */
-	public function setFields( $fields = [] ) {
-		$this->fields = apply_filters( "acf_to_post/{$this->key}/fields", $fields );
+	public function setFields() {
+		$this->fields = [];
+	}
+
+	/**
+	 * Get the fields array for the group
+	 *
+	 * @return array
+	 * @since 0.1.0
+	 */
+	public function getFields() {
+		if( ! isset( $this->fields ) ) {
+			$this->setFields();
+		}
+
+		return apply_filters( "acf_to_post/{$this->key}/fields", $this->fields );
 	}
 
 	/**

@@ -4,34 +4,26 @@
 namespace TFR\ACFToPost\Layouts;
 
 use TFR\ACFToPost\Util\FieldGenerator;
-use TFR\ACFToPost\Repeaters\Modules;
-use TFR\ACFToPost\Util\Util;
+use TFR\ACFToPost\Base\Layout;
 
-class Hero {
-	public static function init() {
-		$args = [
-			'key'        => self::key(),
-			'label'      => __( 'Hero', 'tfr' ),
-			'name'       => self::key(),
-			'sub_fields' => self::fields(),
-			'repeaters'  => [Modules::key()],
-		];
+class Hero extends Layout {
 
-		return new Layout( $args );
+	public function __construct() {
+		parent::__construct();
+
+		$this->setName( 'hero' );
+		$this->setLabel( __( 'Hero', 'tfr' ) );
+		$this->setRepeaters( ['modules'] );
 	}
 
-	public static function fields() {
-		$fields = new FieldGenerator( self::key() );
+	public function setFields() {
+		$fields = new FieldGenerator( $this->getKey() );
 
-		return [
+		$this->fields = [
 			$fields->add( 'text', [
 				'name'  => 'text',
 				'label' => __( 'Hero Text', 'tfr' ),
 			])
 		];
-	}
-
-	public static function key() {
-		return Util::slugifyClassName( self::class );
 	}
 }

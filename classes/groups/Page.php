@@ -14,13 +14,12 @@ class Page extends Group {
 		// Set the group parameters
 		$this->setKey( Util::slugifyClassName( __CLASS__ ) );
 		$this->setPostTypes( ['page', 'post'] );
-		$this->setFields( $this->fields() );
 	}
 
-	private function fields() {
+	public function setFields() {
 		$fields = new FieldGenerator( $this->getKey() );
 
-		return [
+		$this->fields = [
 			$fields->add( 'text', [
 				'name'  => 'text',
 				'label' => __( 'Page Group Text', 'tfr' ),

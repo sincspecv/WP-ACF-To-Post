@@ -54,7 +54,7 @@ class Plugin {
 		Fields::init();
 		FormatFieldType::init();
 
-//		$this->initLayouts();
+		$this->initLayouts();
 		$this->initFields();
 		$this->initGroups();
 	}
@@ -86,7 +86,8 @@ class Plugin {
 			foreach( $layouts as $layout ) {
 				// Make sure the init method exists before calling it
 				if( method_exists( $layout, 'init' ) ) {
-					forward_static_call( [$layout, 'init'] );
+					$obj = new $layout;
+					$obj->init();
 				}
 			}
 		}

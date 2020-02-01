@@ -5,7 +5,7 @@ namespace TFR\ACFToPost\Base;
 
 use TFR\ACFToPost\Util\Util;
 
-class Repeater {
+class FlexibleContent {
 	/**
 	 * Reference to called class
 	 *
@@ -91,13 +91,6 @@ class Repeater {
 	protected $layouts;
 
 	/**
-	 * Type of repeater field: flexible_content or repeater
-	 *
-	 * @var $type   string
-	 */
-	protected $type;
-
-	/**
 	 * Groups to add the repeater to
 	 *
 	 * @var $groups   array
@@ -114,13 +107,10 @@ class Repeater {
 	 * @since 0.1.0
 	 */
 	public function init() {
-		// Field key must be set
-		if( empty( $this->key ) ) {
-			$this->setKey();
-		}
-
 		foreach( $this->groups as $group ) {
-			add_filter( "acf_to_post/{$group}/fields", [$this, 'buildArray'] );
+			if( is_string( $group ) ) {
+				add_filter( "acf_to_post/{$group}/fields", [$this, 'getArray'] );
+			}
 		}
 	}
 
@@ -130,24 +120,22 @@ class Repeater {
 	 * @return array
 	 * @since 0.1.0
 	 */
-	public function buildArray( $fields ) {
+	public function getArray( $fields ) {
 
-		$field = [
-			'key'               => $this->key,
-			'label'             => isset( $this->label ) ? $this->label : ucwords( $this->key ),
-			'name'              => isset( $this->name ) ? $this->name : $this->key,
-			'type'              => isset( $this->type ) ? $this->type : 'repeater',
+		$fields[] = [
+			'key'               => $this->getKey(),
+			'label'             => isset( $this->label ) ? $this->label : ucwords( $this->getKey() ),
+			'name'              => isset( $this->name ) ? $this->name : $this->getKey(),
+			'type'              => 'flexible_content',
 			'instructions'      => isset( $this->instructions) ? $this->instructions : '',
 			'required'          => isset( $this->required ) ? $this->required : 0,
 			'conditional_logic' => isset( $this->conditional ) ? $this->conditional : 0,
 			'wrapper'           => isset( $this->wrapper ) ? $this->wrapper : [],
-			'layouts'           => isset( $this->layouts ) ? $this->layouts : [],
+			'layouts'           => $this->getLayouts(),
 			'button_label'      => isset( $this->button_label ) ? $this->button_label : __( 'Add Row', 'tfr' ),
 			'min'               => isset( $this->min_rows ) ? $this->min_rows : '',
 			'max'               => isset( $this->max_rows ) ? $this->max_rows : '',
 		];
-
-		array_push( $fields, $field );
 
 		return $fields;
 
@@ -159,8 +147,21 @@ class Repeater {
 	 * @param array $layouts
 	 * @since 0.1.0
 	 */
-	public function addLayouts( array $layouts = [] ) {
+	public function setLayouts( $layouts = [] ) {
 		$this->layouts = apply_filters( "acf_to_post/{$this->key}/layouts", $layouts );
+	}
+
+	/**
+	 * Get layouts for repeater field
+	 *
+	 * @return array
+	 * @since 0.1.0
+	 */
+	public function getLayouts() {
+		if( ! isset( $this->layouts ) ) {
+			$this->setLayouts();
+		}
+		return $this->layouts;
 	}
 
 	/**
@@ -182,6 +183,11 @@ class Repeater {
 	 * @since 0.1.0
 	 */
 	public function getKey() {
+		// Field key must be set
+		if( empty( $this->key ) ) {
+			$this->setKey();
+		}
+
 		return $this->key;
 	}
 
@@ -273,17 +279,6 @@ class Repeater {
 	 */
 	public function setMaxRows( $max_rows = 0 ) {
 		$this->max_rows = $max_rows;
-	}
-
-	/**
-	 * Set the type for repeater field.
-	 * 'flexible_content' and 'repeater' are the only valid arguments
-	 *
-	 * @param string $type
-	 * @since 0.1.0
-	 */
-	public function setType( $type = 'repeater' ) {
-		$this->type = $type;
 	}
 
 	/**
