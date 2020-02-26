@@ -54,9 +54,9 @@ class Plugin {
 		Fields::init();
 		FormatFieldType::init();
 
-		$this->initLayouts();
-		$this->initFields();
-		$this->initGroups();
+		add_action( 'plugins_loaded', [$this, 'initLayouts'] );
+		add_action( 'plugins_loaded', [$this, 'initFields'] );
+		add_action( 'plugins_loaded', [$this, 'initGroups'] );
 	}
 
 	/**
@@ -76,11 +76,8 @@ class Plugin {
 	 *
 	 * @since 0.1.0
 	 */
-	private function initLayouts() {
-		$layouts = [
-			Hero::class,
-		];
-		$layouts = apply_filters( 'acf_to_post/init/layouts', $layouts );
+	public function initLayouts() {
+		$layouts = apply_filters( 'acf_to_post/init/layouts', [] );
 
 		if( ! empty( $layouts ) ) {
 			foreach( $layouts as $layout ) {
@@ -93,10 +90,8 @@ class Plugin {
 		}
 	}
 
-	private function initFields() {
-		$fields = [
-			Modules::class,
-		];
+	public function initFields() {
+		$fields = apply_filters( 'acf_to_post/init/fields', [] );
 
 		if( ! empty( $fields ) ) {
 			foreach( $fields as $field ) {
@@ -117,11 +112,8 @@ class Plugin {
 	 *
 	 * @since 0.1.0
 	 */
-	private function initGroups() {
-		$groups = [
-			Page::class,
-		];
-		$groups = apply_filters( 'acf_to_post/init/groups', $groups );
+	public function initGroups() {
+		$groups = apply_filters( 'acf_to_post/init/groups', [] );
 
 		if( ! empty( $groups ) ) {
 			foreach( $groups as $group ) {
