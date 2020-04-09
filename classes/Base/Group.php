@@ -50,6 +50,20 @@ class Group {
 	protected $templates;
 
 	/**
+	 * Post types on which to ignore group
+	 *
+	 * @var $ignored_post_types    array
+	 */
+	protected $ignored_post_types;
+
+	/**
+	 * Templates on which to ignore group
+	 *
+	 * @var $ignored_templates    array
+	 */
+	protected $ignored_templates;
+
+	/**
 	 * Elements to hide on screen
 	 *
 	 * @var $hidden_elements    array
@@ -164,6 +178,16 @@ class Group {
 	}
 
 	/**
+	 * Set the post types on which to ignore the group
+	 *
+	 * @param array $post_types
+	 * @since 0.1.0
+	 */
+	public function ignorePostTypes( $post_types = [] ) {
+		$this->ignored_post_types = $post_types;
+	}
+
+	/**
 	 * Set the templates on which to show the group
 	 *
 	 * @param array $templates
@@ -171,6 +195,16 @@ class Group {
 	 */
 	public function setTemplates( $templates = [] ) {
 		$this->templates = $templates;
+	}
+
+	/**
+	 * Set the templates on which to ignore the group
+	 *
+	 * @param array $templates
+	 * @since 0.1.0
+	 */
+	public function ignoreTemplates( $templates = [] ) {
+		$this->ignored_templates = $templates;
 	}
 
 	/**
@@ -219,33 +253,56 @@ class Group {
 	public function getLocations() {
 		$results = [];
 
+		if( ! empty( $this->ignored_templates ) ) {
+			foreach( $this->ignored_templates as $template ) {
+				$toAdd =
+					[
+						'param'    => 'post_template',
+						'operator' => '!=',
+						'value'    => $template,
+					];
+
+				array_push($results, $toAdd);
+			}
+		}
+
 		if( ! empty( $this->templates ) ) {
 			foreach( $this->templates as $template ) {
-				$toAdd =[
+				$toAdd =
 					[
-						'param'    => 'page_template',
+						'param'    => 'post_template',
 						'operator' => '==',
 						'value'    => $template,
-					]
-				];
+					];
 
+				array_push($results, $toAdd);
+			}
+		}
+
+		if( ! empty( $this->ignored_post_types ) ) {
+			foreach( $this->ignored_post_types as $post_type) {
+				$toAdd =
+					[
+						'param'    => 'post_type',
+						'operator' => '!=',
+						'value'    => $post_type,
+					];
 				array_push($results, $toAdd);
 			}
 		}
 
 		if( ! empty( $this->post_types ) ) {
 			foreach( $this->post_types as $post_type) {
-				$toAdd =[
+				$toAdd =
 					[
 						'param'    => 'post_type',
 						'operator' => '==',
 						'value'    => $post_type,
-					]
-				];
+					];
 				array_push($results, $toAdd);
 			}
 		}
 
-		return $results;
+		return [$results];
 	}
 }
