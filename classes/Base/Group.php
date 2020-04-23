@@ -69,7 +69,13 @@ class Group {
 	 * @var $hidden_elements    array
 	 */
 	protected $hidden_elements;
-
+	
+	/*
+	 * Menu order option
+	 *
+	 * @var $order  int
+	 */
+	protected $order;
 
 	/**
 	 * Group parameters
@@ -111,6 +117,7 @@ class Group {
 			'fields'         => $this->getFields(),
 			'location'       => $this->getLocations(),
 			'hide_on_screen' => isset( $this->hidden_elements ) ? $this->hidden_elements : [],
+			'menu_order'     => $this->getOrder(),
 		];
 	}
 
@@ -304,5 +311,23 @@ class Group {
 		}
 
 		return [$results];
+	}
+	
+	/**
+	 * Set the menu_order option
+	 * 
+	 * @param int $order
+	 */
+	protected function setOrder($order = 0) {
+		$this->order = (int)$order;
+	}
+
+	/**
+	 * Get the menu_order option. Returns 0 if not set.
+	 * 
+	 * @return int
+	 */
+	protected function getOrder() {
+		return empty($this->order) ? 0 : $this->order;
 	}
 }
