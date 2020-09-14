@@ -69,13 +69,19 @@ class Group {
 	 * @var $hidden_elements    array
 	 */
 	protected $hidden_elements;
-	
+
 	/*
 	 * Menu order option
 	 *
 	 * @var $order  int
 	 */
 	protected $order;
+	/*
+	 * Position option
+	 *
+	 * @var $order  int
+	 */
+	protected $position;
 
 	/**
 	 * Group parameters
@@ -111,14 +117,15 @@ class Group {
 	 * @since 0.1.0
 	 */
 	public function getArray() {
-		return [
-			'key'            => $this->getKey(),
-			'title'          => isset( $this->title ) ? $this->title : ucwords( $this->key ),
-			'fields'         => $this->getFields(),
-			'location'       => $this->getLocations(),
-			'hide_on_screen' => isset( $this->hidden_elements ) ? $this->hidden_elements : [],
-			'menu_order'     => $this->getOrder(),
-		];
+	    return [
+            'key'            => $this->getKey(),
+            'title'          => isset( $this->title ) ? $this->title : ucwords( $this->key ),
+            'fields'         => $this->getFields(),
+            'location'       => $this->getLocations(),
+            'hide_on_screen' => isset( $this->hidden_elements ) ? $this->hidden_elements : [],
+            'menu_order'     => $this->getOrder(),
+		    'position'       => $this->getPosition(),
+        ];
 	}
 
 	/**
@@ -312,10 +319,10 @@ class Group {
 
 		return [$results];
 	}
-	
+
 	/**
 	 * Set the menu_order option
-	 * 
+	 *
 	 * @param int $order
 	 */
 	protected function setOrder($order = 0) {
@@ -324,10 +331,28 @@ class Group {
 
 	/**
 	 * Get the menu_order option. Returns 0 if not set.
-	 * 
+	 *
 	 * @return int
 	 */
 	protected function getOrder() {
 		return empty($this->order) ? 0 : $this->order;
+	}
+
+	/**
+	 * Set the position option
+	 *
+	 * @param string $position
+	 */
+	protected function setPosition($position = 'normal') {
+		$this->position = $position;
+	}
+
+	/**
+	 * Get the position option
+	 *
+	 * @return string
+	 */
+	protected function getPosition() {
+		return empty($this->position) ? 'normal' : $this->position;
 	}
 }
