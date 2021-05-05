@@ -54,9 +54,9 @@ class Plugin {
 		Fields::init();
 		FormatFieldType::init();
 
-		add_action( 'plugins_loaded', [$this, 'initLayouts'] );
-		add_action( 'plugins_loaded', [$this, 'initFields'] );
-		add_action( 'plugins_loaded', [$this, 'initGroups'] );
+		add_action( 'after_setup_theme', [$this, 'initLayouts'] );
+		add_action( 'after_setup_theme', [$this, 'initFields'] );
+		add_action( 'after_setup_theme', [$this, 'initGroups'] );
 	}
 
 	/**
