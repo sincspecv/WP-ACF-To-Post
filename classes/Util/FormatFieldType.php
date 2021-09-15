@@ -8,7 +8,7 @@ namespace TFR\ACFToPost\Util;
  *
  * Adds sanitation to ACF fields based on type.
  *
- * Each method is named exactly the same as the type and is passed to the acf/format_value/type=* filter.
+ * Each method is named exactly the same as the 'type' and is passed to the acf/format_value/type=* filter.
  *
  * Custom sanitation can be added using the acf_to_post/format_field/type filter. This filter passes an
  * array with two keys: 'type' and 'function'. The 'type' value is a string to specify the type of field to
@@ -59,7 +59,7 @@ class FormatFieldType {
 	}
 
 	/**
-	 * Text field sanitation
+	 * Text field sanitization
 	 *
 	 * @param $value
 	 * @param $post_id
@@ -69,11 +69,25 @@ class FormatFieldType {
 	 * @since 0.1.0
 	 */
 	public static function text( $value, $post_id, $field ) {
-		return esc_attr( $value );
+		return wp_kses( $value, 'tfr' );
 	}
 
 	/**
-	 * URL field sanitation
+	 * Textarea field sanitization
+	 *
+	 * @param $value
+	 * @param $post_id
+	 * @param $field
+	 *
+	 * @return string|void
+	 * @since 0.1.3
+	 */
+	public static function textarea( $value, $post_id, $field ) {
+		return wp_kses( $value, 'tfr' );
+	}
+
+	/**
+	 * URL field sanitization
 	 *
 	 * @param $value
 	 * @param $post_id
