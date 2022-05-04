@@ -12,18 +12,28 @@ Domain Path: /lang
 
 namespace TFR\ACFToPost;
 
-use TFR\ACFToPost\Inc\Config;
+use TFR\ACFToPost\Groups\Page;
+use TFR\ACFToPost\Layouts\Hero;
+use TFR\ACFToPost\Repeaters\Modules;
+use TFR\ACFToPost\Util\FormatFieldType;
 
 // Exit if accessed directly
 if( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * Class Plugin
+ *
+ * @package TFR\ACFToPost
+ * @since 0.1.0
+ */
 class Plugin {
 	/**
 	 * Define the version of the plugin
 	 *
 	 * @var string $version
+	 * @since 0.1.0
 	 */
-	public $version = "0.1.0";
+	public $version = "0.1.1";
 
 	/**
 	 * Path to root directory of plugin
@@ -33,55 +43,92 @@ class Plugin {
 	public $path;
 
 	/**
-	 * Plugin constructor.
+	 * Plugin constructor
+	 *
+	 * @since 0.1.0
 	 */
 	function __construct() {
 		$this->path = dirname(__FILE__);
 		$this->autoload();
 
-		add_action('plugins_loaded', [Config::class, 'initLayouts']);
-		add_action('acf/init', [$this, 'addFlexibleLayouts']);
+		Fields::init();
+		FormatFieldType::init();
+
+		add_action( 'after_setup_theme', [$this, 'initLayouts'] );
+		add_action( 'after_setup_theme', [$this, 'initFields'] );
+		add_action( 'after_setup_theme', [$this, 'initGroups'] );
 	}
 
 	/**
 	 * Load classes
+	 *
+	 * @since 0.1.0
 	 */
 	private function autoload() {
-		$dirs = glob( "{$this->path}/*", GLOB_ONLYDIR);
+		require_once $this->path . '/autoload.php';
+	}
 
-		foreach( $dirs as $dir ) {
-			if( file_exists( "{$dir}/autoload.php" ) ) {
-				require_once( "{$dir}/autoload.php");
+	/**
+	 * Initialize ACF layouts
+	 *
+	 * The $layouts variable is an array of class names. Each class represents an
+	 * ACF layout and must contain a method named init that adds the layout to an ACF group.
+	 *
+	 * @since 0.1.0
+	 */
+	public function initLayouts() {
+		$layouts = apply_filters( 'acf_to_post/init/layouts', [] );
+
+		if( ! empty( $layouts ) ) {
+			foreach( $layouts as $layout ) {
+				// Make sure the init method exists before calling it
+				if( method_exists( $layout, 'init' ) ) {
+					$obj = new $layout;
+					$obj->init();
+				}
+			}
+		}
+	}
+
+	public function initFields() {
+		$fields = apply_filters( 'acf_to_post/init/fields', [] );
+
+		if( ! empty( $fields ) ) {
+			foreach( $fields as $field ) {
+				// Make sure the init method exists before calling it
+				if( method_exists( $field, 'init' ) ) {
+					$obj = new $field;
+					$obj->init();
+				}
 			}
 		}
 	}
 
 	/**
-	 * Add the flexible layout group
+	 * Initialize ACF groups
+	 *
+	 * The $groups variable is an array of class names. Each class represents an
+	 * ACF group and must contain a method named init that adds the group.
+	 *
+	 * @since 0.1.0
 	 */
-	public function addFlexibleLayouts()  {
-		$layouts = apply_filters( Config::LAYOUTS_FILTER, []);
+	public function initGroups() {
+		$groups = apply_filters( 'acf_to_post/init/groups', [] );
 
-		acf_add_local_field_group([
-			'key'            => strtolower( str_replace(['\\', '-'], '_', __NAMESPACE__ ) ) . '_flexible_layout',
-			'title'          => __(Config::GROUP_LABEL, 'tfr'),
-			'fields'         => [
-				[
-					'key'          => Config::KEY,
-					'label'        => __('Blocks', 'tfr'),
-					'name'         => Config::KEY,
-					'type'         => 'flexible_content',
-					'layouts'      => $layouts,
-					'button_label' => __('Add Block', 'tfr'),
-				],
-			],
-			'location'       => Config::locations(),
-			'hide_on_screen' => ['the_content'],
-		]);
+		if( ! empty( $groups ) ) {
+			foreach( $groups as $group ) {
+				// Make sure the init method exists before calling it
+				if( method_exists ( $group, 'init' ) ) {
+					$obj = new $group;
+					$obj->init();
+				}
+			}
+		}
 	}
-
 }
 
 // bootstrap the plugin
 new Plugin();
+
+
 
