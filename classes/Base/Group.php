@@ -43,6 +43,13 @@ class Group {
 	protected $post_types;
 
 	/**
+	 * Page Types on which to display group
+	 *
+	 * @var $page_types    array
+	 */
+	protected $page_types;
+
+	/**
 	 * Templates on which to display group
 	 *
 	 * @var $templates    array
@@ -192,6 +199,16 @@ class Group {
 	}
 
 	/**
+	 * Set the post types on which to show the group
+	 *
+	 * @param array $post_types
+	 * @since 0.1.0
+	 */
+	public function setPageTypes( $page_types = [] ) {
+		$this->page_types = $page_types;
+	}
+
+	/**
 	 * Set the post types on which to ignore the group
 	 *
 	 * @param array $post_types
@@ -312,6 +329,18 @@ class Group {
 						'param'    => 'post_type',
 						'operator' => '==',
 						'value'    => $post_type,
+					];
+				array_push($results, $toAdd);
+			}
+		}
+
+		if( ! empty( $this->page_types ) ) {
+			foreach( $this->page_types as $page_type) {
+				$toAdd =
+					[
+						'param'    => 'page_type',
+						'operator' => '==',
+						'value'    => $page_type,
 					];
 				array_push($results, $toAdd);
 			}
