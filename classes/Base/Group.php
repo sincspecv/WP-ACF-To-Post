@@ -83,12 +83,20 @@ class Group {
 	 * @var $order  int
 	 */
 	protected $order;
+
 	/*
 	 * Position option
 	 *
 	 * @var $order  int
 	 */
 	protected $position;
+
+	/*
+	 * Location option
+	 *
+	 * @var $location array
+	 */
+	protected $location = [];
 
 	/**
 	 * Group parameters
@@ -224,7 +232,7 @@ class Group {
 	 * @param array $templates
 	 * @since 0.1.0
 	 */
-	public function setTemplates( $templates = [] ) {
+	public function setTemplates(array $templates = [] ) {
 		$this->templates = $templates;
 	}
 
@@ -275,6 +283,25 @@ class Group {
 	}
 
 	/**
+	 * Adds user defined array to the location array
+	 *
+	 * @return array
+	 *
+	 * @since 0.2.0
+	 */
+	public function setLocation(array $location = []) {
+		if(!is_array($location)) {
+			return false;
+		}
+
+		if(!is_array($this->location)) {
+			$this->location = [];
+        }
+
+		array_push($this->location, $location);
+	}
+
+	/**
 	 * Builds array of locations to add group to
 	 *
 	 * @return array
@@ -282,71 +309,62 @@ class Group {
 	 * @since 0.1.0
 	 */
 	public function getLocations() {
-		$results = [];
 
+		/**
+		 * Ideally we could just return $this->location, but this 
+		 * must remain for legacy support
+		 */
 		if( ! empty( $this->ignored_templates ) ) {
 			foreach( $this->ignored_templates as $template ) {
-				$toAdd =
-					[
-						'param'    => 'post_template',
-						'operator' => '!=',
-						'value'    => $template,
-					];
-
-				array_push($results, $toAdd);
+				$this->setLocation([
+					'param'    => 'post_template',
+					'operator' => '!=',
+					'value'    => $template,
+				]);
 			}
 		}
 
 		if( ! empty( $this->templates ) ) {
 			foreach( $this->templates as $template ) {
-				$toAdd =
-					[
-						'param'    => 'post_template',
-						'operator' => '==',
-						'value'    => $template,
-					];
-
-				array_push($results, $toAdd);
+				$this->setLocation([
+					'param'    => 'post_template',
+					'operator' => '==',
+					'value'    => $template,
+				]);
 			}
 		}
 
 		if( ! empty( $this->ignored_post_types ) ) {
 			foreach( $this->ignored_post_types as $post_type) {
-				$toAdd =
-					[
-						'param'    => 'post_type',
-						'operator' => '!=',
-						'value'    => $post_type,
-					];
-				array_push($results, $toAdd);
+				$this->setLocation([
+					'param'    => 'post_type',
+					'operator' => '!=',
+					'value'    => $post_type,
+				]);
 			}
 		}
 
 		if( ! empty( $this->post_types ) ) {
 			foreach( $this->post_types as $post_type) {
-				$toAdd =
-					[
-						'param'    => 'post_type',
-						'operator' => '==',
-						'value'    => $post_type,
-					];
-				array_push($results, $toAdd);
+				$this->setLocation([
+					'param'    => 'post_type',
+					'operator' => '==',
+					'value'    => $post_type,
+				]);
 			}
 		}
 
 		if( ! empty( $this->page_types ) ) {
 			foreach( $this->page_types as $page_type) {
-				$toAdd =
-					[
-						'param'    => 'page_type',
-						'operator' => '==',
-						'value'    => $page_type,
-					];
-				array_push($results, $toAdd);
+				$this->setLocation([
+					'param'    => 'page_type',
+					'operator' => '==',
+					'value'    => $page_type,
+				]);
 			}
 		}
 
-		return [$results];
+		return [$this->location];
 	}
 
 	/**

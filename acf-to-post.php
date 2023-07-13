@@ -3,7 +3,7 @@
 Plugin Name: ACF to Post
 Plugin URI: https://thefancyrobot.com
 Description: Automatically add ACF fields to the post object
-Version: 0.1.0
+Version: 0.2.0
 Author: Matthew Schroeter
 Author URI: https://mattschroeter.me
 Text Domain: tfr
@@ -33,7 +33,7 @@ class Plugin {
 	 * @var string $version
 	 * @since 0.1.0
 	 */
-	public $version = "0.1.1";
+	public $version = "0.2.0";
 
 	/**
 	 * Path to root directory of plugin
